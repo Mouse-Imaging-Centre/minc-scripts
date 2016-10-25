@@ -117,10 +117,10 @@ def addColors(infilename, outfilename, colorfilename=None, colorstring=None,
     writer.SetInputData(polydata)
     writer.SetFileName(outfilename)
     if binary:
-        if verbose: print 'setting ouptut to binary'
+        if verbose: print 'setting output to binary'
         writer.SetFileTypeToBinary()
     else:
-        if verbose: print 'setting ouptut to ascii'
+        if verbose: print 'setting output to ascii'
         writer.SetFileTypeToASCII()
     err = writer.Write()
 
