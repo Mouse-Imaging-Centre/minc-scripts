@@ -125,7 +125,7 @@ def addColors(infilename, outfilename, colorfilename=None, colorstring=None,
     err = writer.Write()
 
 
-def readMeshFile(filename, clean=True, verbose=False):
+def readMeshFile(filename, clean=True, verbose=False, recompute_normals=True):
     """Read mesh file.
     The input format is determined by file name extension.
     Polygons get split into triangles to support various restrictive output
@@ -169,10 +169,23 @@ def readMeshFile(filename, clean=True, verbose=False):
     triangles = vtk.vtkTriangleFilter()
     triangles.SetInputConnection(poly_data_algo.GetOutputPort())
 
-    if verbose:
-        print "finished reading", filename
+    if recompute_normals:
+        normals = vtk.vtkPolyDataNormals()
+        normals.SetInputConnection(triangles.GetOutputPort())
 
-    return triangles
+        normals.SplittingOff()
+        normals.ComputePointNormalsOn()
+        normals.AutoOrientNormalsOn()
+        normals.ConsistencyOn()
+        normals.NonManifoldTraversalOn()
+        if verbose:
+            print "recomputed normals"
+            print "finished reading", filename
+        return normals
+    else:
+        if verbose:
+            print "finished reading", filename
+        return triangles
 
 
 def writeMeshFile(triangles, filename, binary=True, verbose=False):
@@ -239,6 +252,9 @@ if __name__ == "__main__":
     parser.add_option("--noclean", dest="clean",
                       help="remove degenerate data",
                       action="store_false", default=True)
+    parser.add_option("--no-recompute-normals", dest="recompute_normals",
+                      help="recompute surface normals",
+                      action="store_false", default=True)
     parser.add_option("--color", dest="color",
                       help="add color, three values [0..255]",
                       type='string', default=None)
@@ -278,7 +294,7 @@ if __name__ == "__main__":
                   binary=options.binary, verbose=options.verbose)
         sys.exit(0)
 
-    triangles = readMeshFile(options.infilename, clean=options.clean, verbose=options.verbose)
+    triangles = readMeshFile(options.infilename, clean=options.clean, verbose=options.verbose, recompute_normals=options.recompute_normals)
 
     writeMeshFile(triangles, options.outfilename, binary=options.binary,
                   verbose=options.verbose)
