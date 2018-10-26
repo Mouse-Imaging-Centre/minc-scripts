@@ -88,7 +88,7 @@ def addColors(infilename, outfilename, colorfilename=None, colorstring=None,
     #N = reader.GetOutput().GetNumberOfPolys()
     N = reader.GetOutput().GetNumberOfPoints()
     if verbose:
-        print "read %i points (vertices)" % (N,)
+        print("read %i points (vertices)" % (N,))
 
     if colorfilename:
         colorar = readColorFile(colorfilename)
@@ -117,10 +117,10 @@ def addColors(infilename, outfilename, colorfilename=None, colorstring=None,
     writer.SetInputData(polydata)
     writer.SetFileName(outfilename)
     if binary:
-        if verbose: print 'setting output to binary'
+        if verbose: print('setting output to binary')
         writer.SetFileTypeToBinary()
     else:
-        if verbose: print 'setting output to ascii'
+        if verbose: print('setting output to ascii')
         writer.SetFileTypeToASCII()
     err = writer.Write()
 
@@ -152,8 +152,8 @@ def readMeshFile(filename, clean=True, verbose=False, recompute_normals=True):
     reader.Update()
 
     if verbose:
-        print "read %i polygons from file %s" % \
-                               (reader.GetOutput().GetNumberOfPolys(), filename)
+        print("read %i polygons from file %s" % \
+                               (reader.GetOutput().GetNumberOfPolys(), filename))
 
     # merge duplicate points, and/or remove unused points and/or remove degenerate cells
     if clean:
@@ -161,7 +161,7 @@ def readMeshFile(filename, clean=True, verbose=False, recompute_normals=True):
         polydata.SetInputConnection(reader.GetOutputPort())
         poly_data_algo = polydata
         if verbose:
-            print "cleaned poly data"
+            print("cleaned poly data")
     else:
         poly_data_algo = reader
 
@@ -179,12 +179,12 @@ def readMeshFile(filename, clean=True, verbose=False, recompute_normals=True):
         normals.ConsistencyOn()
         normals.NonManifoldTraversalOn()
         if verbose:
-            print "recomputed normals"
-            print "finished reading", filename
+            print("recomputed normals")
+            print("finished reading", filename)
         return normals
     else:
         if verbose:
-            print "finished reading", filename
+            print("finished reading", filename)
         return triangles
 
 
@@ -213,10 +213,10 @@ def writeMeshFile(triangles, filename, binary=True, verbose=False):
 
     if outformat!='tag':
         if binary:
-            if verbose: print 'setting ouptut to binary'
+            if verbose: print('setting ouptut to binary')
             write.SetFileTypeToBinary()
         else:
-            if verbose: print 'setting ouptut to ascii'
+            if verbose: print('setting ouptut to ascii')
             write.SetFileTypeToASCII()
 
     write.SetFileName(filename)
@@ -225,7 +225,7 @@ def writeMeshFile(triangles, filename, binary=True, verbose=False):
         raise IOError('failed to write')
 
     if verbose:
-        print "wrote", filename
+        print("wrote", filename)
     pass
 
 

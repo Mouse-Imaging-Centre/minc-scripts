@@ -29,8 +29,8 @@ def getTable(tablefilename, delimiter = ",", verbose=False):
     coldiff = len(tmp[1])-len(tmp[0])         #raise ValueError('non-matching header')
     table = list()
     for i,r in enumerate(tmp[1:]):
-        table.append(dict(zip(tmp[0],r[coldiff:])))
-    if verbose: print 'using table %s' % (tablefilename,len(tablefilename))
+        table.append(dict(list(zip(tmp[0],r[coldiff:]))))
+    if verbose: print('using table %s' % (tablefilename,len(tablefilename)))
     return table
 
 
@@ -41,14 +41,14 @@ def getTable(tablefilename, delimiter = ",", verbose=False):
 
 
 def label_to_structure(value, table, verbose=False):
-    if verbose: print 'label to structure'
+    if verbose: print('label to structure')
     tmp = [e for e in table if value in (e['left label'],e['right label'])]
     if not len(tmp):
         tmp = [{'label':value}]
     return tmp
 
 def structure_to_label(structure, table, verbose=False):
-    if verbose: print 'structure to label'
+    if verbose: print('structure to label')
     tmp = [e for e in table if string.find(e['Structure'], structure)>-1]
     #width = max([len(e['Structure']) for e in tmp])   #.ljust(width)
     if not len(tmp):
@@ -66,9 +66,9 @@ def isCoord(coords):
     return result==3
 
 def coord_to_label(coord, labelfile, inworldcoords=False, verbose=False):
-    if verbose: print 'coord to label: ', coord
+    if verbose: print('coord to label: ', coord)
     vol = volumeFromFile(labelfile)
-    r = range(len(vol.dimnames))
+    r = list(range(len(vol.dimnames)))
     idx = sorted(r,key=sorted(r,key=vol.dimnames.__getitem__).__getitem__)
     coord = [coord[i] for i in idx]
     if inworldcoords:
@@ -81,7 +81,7 @@ def coord_to_label(coord, labelfile, inworldcoords=False, verbose=False):
     return str(int(label))
 
 def coord_to_structure(coord, labelfile, table, inworldcoords=False, verbose=False):
-    if verbose: print 'coord to structure: '
+    if verbose: print('coord to structure: ')
     l = coord_to_label(coord, labelfile, inworldcoords=inworldcoords, verbose=verbose)
     tmp = label_to_structure(l, table, verbose=verbose)
     tmp[0]['coordinates']=coord
@@ -93,17 +93,17 @@ def printResults(d, onlystructure=False):
     if len(d):
         for e in d:
             if len(e) < 3:
-                k,v = e.iteritems().next()
+                k,v = next(iter(e.items()))
                 if k == 'coordinates':
                     v = '<' + printNiceCoord(v) + '>'
-                print 'no results found for %s %s' % (k,v)
+                print('no results found for %s %s' % (k,v))
             else:
                 s = '%s' % e['Structure']
                 if not onlystructure:
                     s += ', left label: %3s, right label: %3s' % (e['left label'], e['right label'])
                     if 'coordinates' in e.keys():
                         s += ', at: <%s>' % printNiceCoord(e['coordinates'])
-                print s
+                print(s)
     else:
         sys.stderr.write('no results to print\n')
 
@@ -140,7 +140,7 @@ Use '--' to separate negative coordinates from options, e.g. %prog -l labels.mnc
 
 
     if options.listtablefiles:
-        print '\n'.join(tablefiles)
+        print('\n'.join(tablefiles))
         sys.exit(0)
 
     if not len(args):

@@ -29,7 +29,7 @@ def tfce(invol, outvol, dh=0.1, E=0.5, H=2.0, mask='', verbose=False):
         # compute TFCE (array)
         if num_features > 0:
             # compute the size of each label and modulate label size by voxel volume
-            sizes = array(ndimage.sum(thresh, labeled_array, range(num_features+1))) * voxel_volume
+            sizes = array(ndimage.sum(thresh, labeled_array, list(range(num_features+1)))) * voxel_volume
             # create an array where each voxel's value is the size of its patch
             size_array = sizes[labeled_array]
             outvol.data = outvol.data + dh*h**H * size_array**E
@@ -48,7 +48,7 @@ def tfce_both(invol, outvol, dh=0.1, E=0.5, H=2.0, mask='', verbose=False):
 def tfce_max(vol, mask='', verbose=False):
     # get the maximum within the volume or optional mask
     if mask:
-        if verbose: print 'using mask', mask
+        if verbose: print('using mask', mask)
         maskvol = volumeFromFile(mask)
         labels = array(maskvol.data > 0.5, "uint8")
     else:
@@ -68,7 +68,7 @@ def run_tfce(input_filenames, suffix='_tfce',
                 verbose=False):
     maxima = []
     for f in input_filenames:
-        if verbose: print "processing %s" % f
+        if verbose: print("processing %s" % f)
         (root, ext) = path.splitext(f)
         output_basename = root + suffix
         max_output_filename = output_basename + '_max.txt'
@@ -78,7 +78,7 @@ def run_tfce(input_filenames, suffix='_tfce',
                 command = command + ' --' + a + '=' + str(locals()[a])
             # add --no-clobber if clobber==True
             command = command + ' --no-image-output ' + ' --save-maximum ' + f
-            print command
+            print(command)
         else:
             if calc_quantile:
                 with open(max_output_filename, 'r') as f:
@@ -99,7 +99,7 @@ def run_tfce(input_filenames, suffix='_tfce',
                         f.write('%0.8f\n' % tmp)
                         f.close()
                 else:
-                    if verbose: print "using %s, unset '--no-clobber' option to overwrite" % max_output_filename
+                    if verbose: print("using %s, unset '--no-clobber' option to overwrite" % max_output_filename)
                     with open(max_output_filename, 'r') as f:
                         tmp =  float(f.readline())
             maxima.append(tmp)
@@ -108,10 +108,10 @@ def run_tfce(input_filenames, suffix='_tfce',
 
 
 def max_tfce_quantiles(values, probs=[0.9,0.95,0.99]):
-    print '# quantiles from %d maxima' % len(values)
-    print 'threshold', 'quantile'                               # matches R type 7 interpolation
+    print('# quantiles from %d maxima' % len(values))
+    print('threshold', 'quantile')                               # matches R type 7 interpolation
     for p,q in zip(probs, stats.mstats.mquantiles(values, probs, alphap=1, betap=1)):
-        print '%9.2f %8.2f' % (p, q)
+        print('%9.2f %8.2f' % (p, q))
 
 
 ###############################################################################

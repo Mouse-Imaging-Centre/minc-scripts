@@ -49,7 +49,7 @@ def createLabelVol(ar, outname, likefilename, verbose=False):
                                             volumeType="ushort", labels=True)
     outlabels.data = ar
     if verbose:
-        print 'saving cluster labels to', outname
+        print('saving cluster labels to', outname)
     outlabels.writeFile()
     #outlabels.closeVolume()
     return outlabels
@@ -61,7 +61,7 @@ def labeled_volume(filename, threshold, outname, maskarray, verbose=False):
     if len(threshold) < 2 or threshold[0] > threshold[1]:
         raise ValueError('Threshold is not an ordered tuple')
     if verbose:
-        print "thresholding with", threshold
+        print("thresholding with", threshold)
     invol = volumeFromFile(filename)
     # threshold  (set outside threshold(s) and mask to zero)
     threshvol = invol.data.copy()
@@ -71,7 +71,7 @@ def labeled_volume(filename, threshold, outname, maskarray, verbose=False):
     # connected components labelling
     cluster_array, num_features = ndimage.label(threshvol)
     if verbose:
-        print "found", num_features, "clusters"
+        print("found", num_features, "clusters")
     clustervol = createLabelVol(cluster_array, outname, likefilename=filename, verbose=verbose)
     return clustervol
 
@@ -122,7 +122,7 @@ def getPeakValues(vols, peakvolname, labelvol, labelvalue, ids,
     if smoothing_sigma:
         peakvol.data = ndimage.filters.gaussian_filter(peakvol.data, smoothing_sigma)
         if verbose:
-            print "peak estimation: smoothing with sigma of", smoothing_sigma
+            print("peak estimation: smoothing with sigma of", smoothing_sigma)
 
     # returns index of first extreme (regions where mask is True get masked/removed!)
     maxlinidx = ma.array(peakvol.data, mask=~labelmask).argmax()
@@ -180,7 +180,7 @@ def clusterstats(vols, labelvol, df, maskarray, atlasname, defsname, voxelthresh
         if voxelthresh and nvoxels_cluster < voxelthresh:
             continue
         if verbose:
-            print 'processing cluster index', i
+            print('processing cluster index', i)
 
         # get values averages across cluster
         dftmp = getValues(vols, labelvol, i, df[idcolumn].values, maskarray, verbose=verbose)
@@ -279,7 +279,7 @@ def printPrettyPandas(df):
     """pretty print using whole width of terminal"""
     pd.set_option('display.width', pd.util.terminal.get_terminal_size()[0])
     pd.set_option('display.precision', 3)
-    print df
+    print(df)
 
 
 
@@ -342,7 +342,7 @@ if __name__ == "__main__":
     else:
         #raise IOError('Could not open mask: %s' % options.mask)
         if options.verbose:
-            print 'creating whole volume mask'
+            print('creating whole volume mask')
         invol = volumeFromFile(options.inputvol)
         maskarray = np.ones(invol.data.shape)>0.5
         invol.closeVolume()

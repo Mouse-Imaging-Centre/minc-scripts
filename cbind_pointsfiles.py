@@ -7,7 +7,7 @@
 from optparse import OptionParser
 import numpy as np
 from os import path
-from StringIO import StringIO
+from io import StringIO
 
 
 def readObjFile(filename, verbose=False):
@@ -25,8 +25,8 @@ def readObjFile(filename, verbose=False):
     f = StringIO(''.join(lines[0:npoints]))
     tags = np.loadtxt(f)
     if verbose:
-        print 'read %i (header: %i) points from tag file %s' % \
-                                            (tags.shape[0], npoints, filename)
+        print('read %i (header: %i) points from tag file %s' % \
+                                            (tags.shape[0], npoints, filename))
     return tags
 
 
@@ -50,7 +50,7 @@ def readTagFile(filename, verbose=False):
     f = StringIO(lines)
     tags = np.loadtxt(f)
     if verbose:
-        print 'read %i points from tag file %s' % (tags.shape[0],filename)
+        print('read %i points from tag file %s' % (tags.shape[0],filename))
     return tags
 
 
@@ -80,7 +80,7 @@ Volumes = 2;
 Points = """ % (path.basename(__file__), filenames[0], filenames[1])
     np.savetxt(outname, outtags, fmt='%g', header=header, footer=footer, comments='')
     if verbose:
-        print 'saved to file:', outname
+        print('saved to file:', outname)
     return outtags
 
 

@@ -39,8 +39,8 @@ def readMeshFile(filename, verbose=False):
 
     if verbose:
         # nPolys*3 == R's readSTL nrow
-        print "read %i polygons from file %s" % \
-                               (reader.GetOutput().GetNumberOfPolys(), filename)
+        print("read %i polygons from file %s" % \
+                               (reader.GetOutput().GetNumberOfPolys(), filename))
 
     return reader.GetOutput()
 
@@ -55,7 +55,7 @@ def readRData(filename, objectname, verbose=False):
     for s in arrayfieldnames:
         rd[s] = np.ascontiguousarray(d[s], dtype=np.float32)
         if verbose:
-            print 'read', s, 'with dimensions', rd[s].shape
+            print('read', s, 'with dimensions', rd[s].shape)
     return rd
 
 
@@ -77,7 +77,7 @@ def scaleMesh(polydata, rdict, col=1, scale=1.0, verbose=False):
     pcar = pcar[:,col].reshape((mshape.shape[::-1])).transpose()
 
     if verbose:
-        print 'adding PC', col, 'with scale', scale
+        print('adding PC', col, 'with scale', scale)
     mshape = mshape + scale * pcar
     vtkdata = numpy_to_vtk(num_array=mshape, deep=True, array_type=vtk.VTK_FLOAT)
 
@@ -108,10 +108,10 @@ def writeMeshFile(polydata, filename, binary=True, verbose=False):
 
     if outformat!='tag':
         if binary:
-            if verbose: print 'setting ouptut to binary'
+            if verbose: print('setting ouptut to binary')
             writer.SetFileTypeToBinary()
         else:
-            if verbose: print 'setting ouptut to ascii'
+            if verbose: print('setting ouptut to ascii')
             writer.SetFileTypeToASCII()
 
     writer.SetFileName(filename)
@@ -120,7 +120,7 @@ def writeMeshFile(polydata, filename, binary=True, verbose=False):
         raise IOError('failed to write')
 
     if verbose:
-        print "wrote", filename
+        print("wrote", filename)
     pass
 
 
